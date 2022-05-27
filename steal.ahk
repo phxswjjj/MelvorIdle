@@ -1,4 +1,5 @@
-UniqueID := WinExist("Melvor Idle")
+AppTitle := "Melvor Idle"
+UniqueID := WinExist(AppTitle)
 if not UniqueID {
     OutputDebug, "Melvor Idlex not found"
     return
@@ -15,7 +16,7 @@ FoodValue := 70
 LifeMinX := 301
 LifeMaxX := 770
 LifeRatio := (LifeValue - FoodValue * 2) / LifeValue
-If LifeRatio < 0.5 {
+If (LifeRatio < 0.5) {
     LifeRatio := 0.5
 }
 LifeTargetX := Floor(LifeMinX + (LifeRatio * (LifeMaxX-LifeMinX)))
@@ -23,7 +24,12 @@ LifeTargetX := Floor(LifeMinX + (LifeRatio * (LifeMaxX-LifeMinX)))
 OutputDebug, LifeRatio = %LifeRatio%
 
 While (KeepRunning) {
-    WinActivate, ahk_id %UniqueID%
+    IfWinNotActive, ahk_id %UniqueID%
+    {
+        Sleep, 100
+        Continue
+    }
+    ; WinActivate, ahk_id %UniqueID%
     PixelSearch, Px, Py, LifeMinX, 325, LifeTargetX, 335, 0x5c6ad2, 2, Fast
     FormatTime, CurrentDateTime,, HH:mm:ss
     if ErrorLevel {
